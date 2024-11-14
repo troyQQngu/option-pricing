@@ -1,0 +1,222 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>MATH512_Proj3</title><meta name="generator" content="MATLAB 9.11"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2022-03-03"><meta name="DC.source" content="MATH512_Proj3.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">4</a></li></ul></div><pre class="codeinput"><span class="comment">% MATH512 Project 3</span>
+clear <span class="string">all</span>
+close <span class="string">all</span>
+</pre><h2 id="2">4</h2><p>SDE: dXt = a*X_t*dt + b*X_t*dW_t, a = 0.05, b =0.2, X0 = 100 a) We want to present a simulation method using Euler-Maruyama discretization.</p><pre class="codeinput">a = 0.05;
+b = 0.2;
+X0 = 100; <span class="comment">% initial value</span>
+T_int = 0; <span class="comment">% start time</span>
+T_end = 10; <span class="comment">% end time</span>
+
+N = 10000; <span class="comment">% number of grid points</span>
+m = 10000; <span class="comment">% number of simulations</span>
+
+Yt = zeros(m,N+1);
+Yt(:,1) = Yt(:,1) + X0;
+dt = (T_end-T_int)/N;
+
+<span class="keyword">for</span> j = 1:m
+    <span class="keyword">for</span> i = 2:N+1
+        Yt(j,i) = Yt(j,i-1) + a*Yt(j,i-1)*dt + b*Yt(j,i-1)*dW(dt); <span class="comment">% 'dW(t)' is a function that returns a N(0,t) random number</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+figure
+<span class="comment">% show 5 of the simulations</span>
+<span class="keyword">for</span> i = 1:5
+    plot(T_int:dt:T_end,Yt(i,:));
+    hold <span class="string">on</span>
+<span class="keyword">end</span>
+title(<span class="string">'Euler- Maruyama Simulations'</span>,FontSize=17)
+xlabel(<span class="string">'t'</span>)
+ylabel(<span class="string">'X(t)'</span>)
+legend(<span class="string">'simulation 1'</span>,<span class="string">'simulation 2'</span>,<span class="string">'simulation 3'</span>,<span class="string">'simulation 4'</span>,<span class="keyword">...</span>
+    <span class="string">'simulation 5'</span>,FontSize=15)
+<span class="comment">% b) analytical solution: Xt = 100*exp((a-b^2/2)t+b(W(t)-W(0)))</span>
+Xt = zeros(m,N+1);
+Xt(:,1) = Xt(:,1) + X0;
+<span class="keyword">for</span> j = 1:m
+    <span class="keyword">for</span> i = 2:N+1
+        Xt(j,i) = Xt(j,i-1)*exp((a-b^2/2)*dt+b*dW(dt));
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">% show 5 of the simulations</span>
+figure
+<span class="keyword">for</span> i = 1:5
+    plot(T_int:dt:T_end,Xt(i,:));
+    hold <span class="string">on</span>
+<span class="keyword">end</span>
+title(<span class="string">'Analytical Solutions'</span>,FontSize=17)
+xlabel(<span class="string">'t'</span>)
+ylabel(<span class="string">'X(t)'</span>)
+legend(<span class="string">'Analytical 1'</span>,<span class="string">'Analytical 2'</span>,<span class="string">'Analytical 3'</span>,<span class="keyword">...</span>
+    <span class="string">'Analytical 4'</span>,<span class="string">'Analytical 5'</span>,FontSize=15)
+
+<span class="comment">% compare: take average</span>
+X_avg_t = mean(Xt);
+Y_avg_t = mean(Yt);
+
+figure
+plot(T_int:dt:T_end,X_avg_t,LineWidth=2)
+hold <span class="string">on</span>
+plot(T_int:dt:T_end,Y_avg_t,LineWidth=2)
+title(<span class="string">'Analytical Average Vs Simulation Average over 10000 samples'</span>,FontSize=17)
+xlabel(<span class="string">'t'</span>)
+ylabel(<span class="string">'X(t)'</span>)
+legend(<span class="string">'Analytic solutions average'</span>,<span class="string">'Simulations average'</span>,FontSize = 15)
+
+
+<span class="keyword">function</span> dW = dW(t)
+    dW = randn*sqrt(t);
+<span class="keyword">end</span>
+</pre><img vspace="5" hspace="5" src="MATH512_Proj3_01.png" alt=""> <img vspace="5" hspace="5" src="MATH512_Proj3_02.png" alt=""> <img vspace="5" hspace="5" src="MATH512_Proj3_03.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2021b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+% MATH512 Project 3
+clear all
+close all
+%% 4
+% SDE: dXt = a*X_t*dt + b*X_t*dW_t, a = 0.05, b =0.2, X0 = 100
+% a) We want to present a simulation method using Euler-Maruyama
+% discretization. 
+
+a = 0.05;
+b = 0.2;
+X0 = 100; % initial value
+T_int = 0; % start time
+T_end = 10; % end time
+
+N = 10000; % number of grid points
+m = 10000; % number of simulations
+
+Yt = zeros(m,N+1);
+Yt(:,1) = Yt(:,1) + X0;
+dt = (T_end-T_int)/N;
+
+for j = 1:m
+    for i = 2:N+1
+        Yt(j,i) = Yt(j,i-1) + a*Yt(j,i-1)*dt + b*Yt(j,i-1)*dW(dt); % 'dW(t)' is a function that returns a N(0,t) random number
+    end
+end
+
+figure
+% show 5 of the simulations
+for i = 1:5
+    plot(T_int:dt:T_end,Yt(i,:));
+    hold on
+end
+title('Euler- Maruyama Simulations',FontSize=17)
+xlabel('t')
+ylabel('X(t)')
+legend('simulation 1','simulation 2','simulation 3','simulation 4',...
+    'simulation 5',FontSize=15)
+% b) analytical solution: Xt = 100*exp((a-b^2/2)t+b(W(t)-W(0)))
+Xt = zeros(m,N+1);
+Xt(:,1) = Xt(:,1) + X0;
+for j = 1:m
+    for i = 2:N+1
+        Xt(j,i) = Xt(j,i-1)*exp((a-b^2/2)*dt+b*dW(dt));
+    end
+end
+
+% show 5 of the simulations
+figure
+for i = 1:5
+    plot(T_int:dt:T_end,Xt(i,:));
+    hold on
+end
+title('Analytical Solutions',FontSize=17)
+xlabel('t')
+ylabel('X(t)')
+legend('Analytical 1','Analytical 2','Analytical 3',...
+    'Analytical 4','Analytical 5',FontSize=15)
+
+% compare: take average
+X_avg_t = mean(Xt);
+Y_avg_t = mean(Yt);
+
+figure
+plot(T_int:dt:T_end,X_avg_t,LineWidth=2)
+hold on
+plot(T_int:dt:T_end,Y_avg_t,LineWidth=2)
+title('Analytical Average Vs Simulation Average over 10000 samples',FontSize=17)
+xlabel('t')
+ylabel('X(t)')
+legend('Analytic solutions average','Simulations average',FontSize = 15)
+
+
+function dW = dW(t)
+    dW = randn*sqrt(t);
+end
+
+    
+##### SOURCE END #####
+--></body></html>
